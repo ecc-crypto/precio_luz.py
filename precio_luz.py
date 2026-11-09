@@ -75,10 +75,12 @@ def main():
     msg["To"] = os.environ["EMAIL_TO"]
     msg.set_content("\n".join(txt))
 
-    with smtplib.SMTP_SSL("smtp.gmail.com", 465) as s:
-        s.login(os.environ["EMAIL_FROM"], os.environ["EMAIL_APP_PASSWORD"])
+    clave = os.environ["EMAIL_APP_PASSWORD"].replace(" ", "").replace("\xa0", "").strip()
+    usuario = os.environ["EMAIL_FROM"].strip()
+    with smtplib.SMTP("smtp.gmail.com", 587, timeout=30) as s:
+        s.starttls()
+        s.login(usuario, clave)
         s.send_message(msg)
-
 
 if __name__ == "__main__":
     main()
